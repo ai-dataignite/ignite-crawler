@@ -1,0 +1,186 @@
+{
+	"name": "ntis",
+	"db_id": "root",
+	"db_pw": "1234",
+	"db_path": "mariadb://localhost:3306/DEV_CRAWLER_LOG",
+	"seed": {
+		"url": "https://www.ntis.go.kr/ThSearchProjectList.do?gubun=link&searchWord=%ED%95%AD%EA%B3%B5&searchType=&oldSearchWord=%ED%95%AD%EA%B3%B5&resultSearch=&ssoKnfSlct=0&ascDesc=ASC&useYn=N&oldQuery=%ED%95%AD%EA%B3%B5&oldAddQuery=%26SN04%3D2019%7C2013%7C2015%7C2017%7C2011%7C2012%7C2018%7C2016%7C2014%7C2009%7C2010&dbt=project&checkYn=&searchOption16=&pageYn=Y&technologyClassification=ST&directorySearchYear=&directorySearchOption1=&directorySearchOption2=&directorySearchOption3=&downloadTarget=project&startRow=&endRow=&rqstPurpCd=&infoPrctuseDes=&layerChoice=&sort=RANK%2FDESC&pageSize=10&navigation1%5B0%5D=2019&navigation1%5B1%5D=2018&navigation1%5B2%5D=2017&navigation1%5B3%5D=2016&navigation1%5B4%5D=2015&navigation1%5B5%5D=2014&navigation1%5B6%5D=2013&navigation1%5B7%5D=2012&navigation1%5B8%5D=2011&navigation1%5B9%5D=2010&navigation1%5B10%5D=2009",
+		"type": "GET",
+		"data" : []
+	},
+	"ignore_robots": true,
+	"crawling_max_depth": -1,
+	"crawling_type": "SCENARIO_DYNAMIC",
+	"crawling_delay": 1,
+	"crawling_max_count": -1,
+	"contents_save_type": "DB",
+	"save_html": false,
+	"output_file_path": "",
+	"charset": "UTF-8",
+	"selenium_driver_name": "chrome",
+	"selenium_headless": false,
+	"scenario": [
+		{
+			"depth": 0,
+			"action": [
+				{
+					"type": "click",
+					"selector": "#gnbArea > button.login"
+				},
+				{
+					"type": "switch_window",
+					"value": "+1"
+				},
+				{
+					"type": "input",
+					"selector": "body > div > form > label:nth-child(2) > input",				
+					"value": "<%id%>"
+				},
+				{
+					"type": "input",
+					"selector": "body > div > form > label:nth-child(5) > input",				
+					"value": "<%password%>"
+				},
+				{
+					"type": "click",
+					"selector": "body > div > form > input"
+				},
+				{
+					"type": "switch_window",
+					"value": "0"
+				},
+				{
+					"type": "sleep",
+					"value": "5",
+					"target_depth": 1
+				}
+			]
+		},
+		{
+			"depth": 1,
+			"action": [
+				
+				{
+					"type": "click",
+					"selector": "#searchForm > div.list_box > div.resultBox > div > a",
+					"target_depth": 2
+				},
+				{
+					"type": "click",
+					"selector": "a.active + a",
+					"target_depth": 1
+				}
+			]
+		},
+		
+		{
+			"depth": 2,
+			"action": [
+				{
+					"type": "switch_window",
+					"value": "+1"
+				},
+				{
+					"type": "refresh_window"
+				},
+				{
+					"type": "parse_contents",
+					"selector": "#divSummary > table > tbody",
+					"value": "1"
+				},
+				{
+					"type": "close_window"
+				}
+			]
+		}
+	],
+	"collect_recode": [
+		{
+			"depth": 1,
+			"name": "icap_ntis",
+			"recode_selector": "#divSummary > table > tbody",
+			"column": [
+				{
+					"data_type": "varchar(50)",
+					"data_name": "id",
+					"key": true,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#divMain > table.result_table > tbody > tr:nth-child(1) > td:nth-child(2)",
+							"type": "text"
+						}
+					]
+				
+				},
+				{
+					"type": "text",
+					"data_type": "varchar(50)",
+					"data_name": "source_site",
+					"value": "ntis"
+				},
+				{
+					"data_type": "text",
+					"data_name": "title",
+					"allow_null": false,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#content > div.po_rel > dl.result_on.mt40 > dd > span",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(200)",
+					"data_name": "category",
+					"allow_null": false,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#searchmain > header > div > h2",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(200)",
+					"data_name": "reg_date",
+					"allow_null": false,
+					"regex_filter" : ["[0-9]{4}"],
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#content > div.po_rel > dl.result_off > dd",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "text",
+					"data_name": "proprietor",
+					"allow_null": false,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#divMain > table.result_table > tbody > tr:nth-child(6) > td",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "text",
+					"data_name": "contents",
+					"allow_null": false,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#divSummary > table > tbody",
+							"type": "text"
+						}
+					]
+				}
+			]
+		}
+	]
+}
