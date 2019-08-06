@@ -36,6 +36,7 @@ public class Action{
 	int action_idx;
 	int wait_time;
 	int contents_depth;
+	int try_refresh;
 	String cssSelector;
 	String emptySelector;
 	String type;
@@ -55,7 +56,7 @@ public class Action{
 		}
 	}
 	
-	public Action(String type, int target_depth, String cssSelector, String emptySelector, String value, int wait_time, String condition, int contents_depth){
+	public Action(String type, int target_depth, String cssSelector, String emptySelector, String value, int wait_time, String condition, int contents_depth, int try_refresh){
 		this.target_depth = target_depth;
 		this.cssSelector = cssSelector;
 		if(type == null){
@@ -68,6 +69,7 @@ public class Action{
 		this.emptySelector = emptySelector;
 		this.condition = condition;
 		this.contents_depth = contents_depth;
+		this.try_refresh = try_refresh;
 	}
 	
 	public void setNo(int no) {
@@ -104,6 +106,10 @@ public class Action{
 	
 	public int getContentsDepth() {
 		return this.contents_depth;
+	}
+	
+	public int getTryRefresh() {
+		return this.try_refresh;
 	}
 	
 	public String getType(){

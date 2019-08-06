@@ -85,7 +85,8 @@ public class ScenarioDynamicParser extends DefaultParser {
 								   action.getValue(),
 								   action.getWaitTime(),
 								   action.getCondition(),
-								   action.getContentsDepth()));
+								   action.getContentsDepth(),
+								   action.getTryRefresh()));
 				newUrlInfo.setDepth(urlInfo.getDepth());
 				newUrlInfo.getAction().setNo(action.getNo());
 				ret.add(newUrlInfo);
@@ -123,7 +124,8 @@ public class ScenarioDynamicParser extends DefaultParser {
 														value,
 														action.getWaitTime(),
 														condition,
-														action.getContentsDepth()));
+														action.getContentsDepth(),
+														action.getTryRefresh()));
 						newUrlInfo.setDepth(curDepth);
 						newUrlInfo.getAction().setNo(i);
 						ret.add(newUrlInfo);

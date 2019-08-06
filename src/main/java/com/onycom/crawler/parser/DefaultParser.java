@@ -241,7 +241,7 @@ public abstract class DefaultParser implements Parser<Work, Contents> {
 										}
 										/* 데이터를 찾았으면 중단 */
 										if (value != null) {
-											System.out.println(value);
+//											System.out.println(value);
 											if (dict != null && dict.hasDict()) {
 												checkInDict(mapKeyword, value);
 											}
@@ -261,8 +261,8 @@ public abstract class DefaultParser implements Parser<Work, Contents> {
 								continue;
 							}
 							if (value != null) {
-								System.out.println("=============");
-								System.out.println(value);
+//								System.out.println("=============");
+//								System.out.println(value);
 								contents.add(data_name, data_type, value);
 							} else {
 								if (colEls != null && colEls.size() > 0) {
@@ -334,11 +334,13 @@ public abstract class DefaultParser implements Parser<Work, Contents> {
 	 */
 	public int saveContents(Work urlInfo, List<Contents> aryContents) {
 		int idx = 0;
+		int try_connect;
+		boolean loop;
 		if (aryContents != null) {
-			int try_connect = 0;
-			boolean loop = true;
 			for (Contents contents : aryContents) {
 				if (contents != null) {
+					loop = true;
+					try_connect = 0;
 					while(loop) {
 						try {
 							idx += Crawler.Writer.write(contents);

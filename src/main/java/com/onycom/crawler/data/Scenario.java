@@ -16,11 +16,11 @@ public class Scenario {
 	}
 	
 	public void add(int target_depth, String cssSelector){
-		add(null, target_depth, cssSelector, null, null, 30, null, -1);
+		add(null, target_depth, cssSelector, null, null, 30, null, -1, -1);
 	}
 	
-	public void add(String action, int target_depth, String cssSelector, String emptySelector,  String value, int wait_time, String condition, int contents_depth){
-		mAryAction.add(new Action(action, target_depth, cssSelector, emptySelector,  value, wait_time, condition, contents_depth));
+	public void add(String action, int target_depth, String cssSelector, String emptySelector,  String value, int wait_time, String condition, int contents_depth, int try_refresh){
+		mAryAction.add(new Action(action, target_depth, cssSelector, emptySelector,  value, wait_time, condition, contents_depth, try_refresh));
 	}
 	
 	public Action getAction(int idx){

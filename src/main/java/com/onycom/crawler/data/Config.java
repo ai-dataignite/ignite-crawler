@@ -900,7 +900,8 @@ public class Config {
 								 scenObject.isNull("value")? null: scenObject.getString("value"),
 								 scenObject.isNull("wait_time")? 30: scenObject.getInt("wait_time"),
 								 scenObject.isNull("condition")? null: scenObject.getString("condition"),
-								 scenObject.isNull("contents_depth")? -1: scenObject.getInt("contents_depth"));
+								 scenObject.isNull("contents_depth")? -1: scenObject.getInt("contents_depth"),
+								 scenObject.isNull("try_refresh")? -1: scenObject.getInt("try_refresh"));
 				}
 				for(int j = 0 ; j < scenario.getSize() ; j++){
 					scenario.getAction(j);

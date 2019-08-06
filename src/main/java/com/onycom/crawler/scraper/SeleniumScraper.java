@@ -19,13 +19,25 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.Command;
+import org.openqa.selenium.remote.CommandExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.Response;
+import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.remote.http.W3CHttpCommandCodec;
+import org.openqa.selenium.remote.http.W3CHttpResponseCodec;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Sleeper;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 싱글톤으로 운영
@@ -39,23 +51,27 @@ public class SeleniumScraper implements Scraper {
 
 	static final String JAVASCRIPT_REMOVE_ELEMENTS = "var selector = \"%s\"; var els = document.querySelectorAll(selector); for(var i = 0 ; i < els.length ;i++){ els[i].remove()};";
 
-	static final String JAVASCRIPT_HOOKING_AJAX = "sbc_loading_ajax = {}; " + 
-			" oldXHROpen = window.XMLHttpRequest.prototype.open; " + 
-			"window.XMLHttpRequest.prototype.open = function(method, url, async, user, password) { " + 
-			" this.addEventListener('loadstart', function() { " + 
-			"  sbc_loading_ajax[url] = true; " + 
-			" }); " + 
-			" this.addEventListener('progress', function(){" +
-			"  sbc_loading_ajax[url] = true; "+
-			" });"+
-			" this.addEventListener('loadend', function() { " + 
-			"  delete sbc_loading_ajax[url]; " + 
-			" }); " + 
-			" return oldXHROpen.apply(this, arguments); " + 
-			"};";
+	static final String JAVASCRIPT_HOOKING_AJAX = 
+			"if(typeof(sbc_loading_ajax) == 'undefined') {"
+			+ " sbc_loading_ajax = {}; " 
+			+ " oldXHROpen = window.XMLHttpRequest.prototype.open; " 
+			+ " window.XMLHttpRequest.prototype.open = function(method, url, async, user, password) { " 
+			+ " this.addEventListener('loadstart', function() { " 
+			+ "  sbc_loading_ajax[url] = true; " 
+			+ " }); " 
+			+ " this.addEventListener('progress', function(){" 
+			+ "  sbc_loading_ajax[url] = true; "
+			+ " });"
+			+ " this.addEventListener('loadend', function() { " 
+			+ "  delete sbc_loading_ajax[url]; "
+			+ " }); " 
+			+ "  return oldXHROpen.apply(this, arguments); " 
+			+ " };"
+			+ "}";
 	static final String JAVASCRIPT_IS_LOADING_AJAX = "return Object.keys(sbc_loading_ajax).length";
 	
-	final int MAXIMUM_WAIT_AJAX_MS = 3000;
+	final int DEFAULT_AJAX_LOAD_TIMEOUT_MS = 3000;
+	final int DEFAULT_PAGE_LOAD_TIMEOUT_SEC = 30;
 	
 	public SeleniumScraper(Config config) {
 		mConfig = config;
@@ -126,7 +142,42 @@ public class SeleniumScraper implements Scraper {
 					}
 
 					if (action.getType().equalsIgnoreCase(Action.TYPE_CLICK)) {
-						we.click();
+						
+						// 셀레니움 액션 이벤트로 페이지 로딩이 발생할 경우 로딩이 완료 될때까지 블록에 걸림
+						int timeout_sec = DEFAULT_PAGE_LOAD_TIMEOUT_SEC;
+						int try_reload = action.getTryRefresh();
+						boolean isLoaded= false;
+						
+						try {
+							mSeleniumDriver.manage().timeouts().pageLoadTimeout(timeout_sec, TimeUnit.SECONDS);
+							we.click();
+							isLoaded = true;
+						}catch(org.openqa.selenium.TimeoutException e) {
+						}
+						if (!isLoaded) {
+							for(int i = 0 ; i < try_reload ; i++) {
+								System.err.println("try refresh ..." + (i+1));
+								timeout_sec *= 2;
+								
+								SessionId session_id = ((RemoteWebDriver)mSeleniumDriver).getSessionId();
+								HttpCommandExecutor executor = (HttpCommandExecutor) ((RemoteWebDriver)mSeleniumDriver).getCommandExecutor();
+								mSeleniumDriver = createDriverFromSession(session_id, executor.getAddressOfRemoteServer());
+								mSeleniumDriver.manage().timeouts().pageLoadTimeout(timeout_sec, TimeUnit.SECONDS);
+								try {
+									System.err.println("exc refresh");
+									mSeleniumDriver.navigate().refresh();
+									isLoaded = true;
+									break;
+								}catch(org.openqa.selenium.TimeoutException e2) {
+									isLoaded = false;
+								}
+							}
+						}
+						if(!isLoaded) {
+							throw new org.openqa.selenium.TimeoutException();
+						}
+						if(timeout_sec != DEFAULT_PAGE_LOAD_TIMEOUT_SEC)
+							mSeleniumDriver.manage().timeouts().pageLoadTimeout(DEFAULT_PAGE_LOAD_TIMEOUT_SEC, TimeUnit.SECONDS);
 					} else if (action.getType().equalsIgnoreCase(Action.TYPE_NEW_WINDOW_CLICK)) {
 						Actions actions = new Actions(mSeleniumDriver);
 						actions.keyDown(Keys.LEFT_CONTROL).click(we).keyUp(Keys.LEFT_CONTROL).build().perform();
@@ -287,7 +338,7 @@ public class SeleniumScraper implements Scraper {
 						}else {
 							break;
 						}
-						if (wait_time > MAXIMUM_WAIT_AJAX_MS) {
+						if (wait_time > DEFAULT_AJAX_LOAD_TIMEOUT_MS) {
 							work.result().addError(Work.Error.ERR_AJAX, "depth " + work.getDepth(), null);
 							throw new Exception();
 						}
@@ -396,7 +447,47 @@ public class SeleniumScraper implements Scraper {
 				e.printStackTrace();
 			}
 		}
+		
 		return ret;
+	}
+	
+	// 세션 복사해서 새로운 driver 만드는 코드
+	// window 는 첫 window 로 지정되니 윈도우를 변경할 필요가 있을때는 해당코드 추가 필요
+	public static RemoteWebDriver createDriverFromSession(final SessionId sessionId, URL command_executor) {
+		CommandExecutor executor = new HttpCommandExecutor(command_executor) {
+
+			@Override
+			public Response execute(Command command) throws IOException {
+				Response response = null;
+				if (command.getName() == "newSession") {
+					response = new Response();
+					response.setSessionId(sessionId.toString());
+					response.setStatus(0);
+					response.setValue(Collections.<String, String>emptyMap());
+					try {
+						Field commandCodec = null;
+						commandCodec = this.getClass().getSuperclass().getDeclaredField("commandCodec");
+						commandCodec.setAccessible(true);
+						commandCodec.set(this, new W3CHttpCommandCodec());
+
+						Field responseCodec = null;
+						responseCodec = this.getClass().getSuperclass().getDeclaredField("responseCodec");
+						responseCodec.setAccessible(true);
+						responseCodec.set(this, new W3CHttpResponseCodec());
+					} catch (NoSuchFieldException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+
+				} else {
+					response = super.execute(command);
+				}
+				return response;
+			}
+		};
+
+		return new RemoteWebDriver(executor, new DesiredCapabilities());
 	}
 
 //    private static List<WebElement> waitingForAllElements(WebDriver wd, String selector)
@@ -439,6 +530,7 @@ public class SeleniumScraper implements Scraper {
 					options.addArguments("--disable-application-cache");
 					options.addArguments("--disable-notifications");
 					options.addArguments("--no-sandbox");
+					options.setCapability("browserstack.use_w3c", true);
 					// options.addArguments("window-size=1920x1080");
 					if (config.SELENIUM_HEADLESS) {
 						options.addArguments("headless");
