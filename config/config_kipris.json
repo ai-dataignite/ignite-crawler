@@ -1,7 +1,7 @@
 {
 	"name": "kipris",
 	"db_id": "root",
-	"db_pw": "sairport2018",
+	"db_pw": "--------",
 	"db_path": "mariadb://localhost:3306/DEV_CRAWLER_LOG",
 	"seed": {
 		"url": "http://kportal.kipris.or.kr/kportal/search/search_patent.do",
