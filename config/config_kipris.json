@@ -1,0 +1,225 @@
+{
+	"name": "kipris",
+	"db_id": "root",
+	"db_pw": "sairport2018",
+	"db_path": "mariadb://localhost:3306/DEV_CRAWLER_LOG",
+	"seed": {
+		"url": "http://kportal.kipris.or.kr/kportal/search/search_patent.do",
+		"type": "GET",
+		"data": []
+	},
+	"ignore_robots": true,
+	"crawling_max_depth": -1,
+	"crawling_type": "SCENARIO_DYNAMIC",
+	"crawling_delay": 0.5,
+	"crawling_max_count": -1,
+	"contents_save_type": "DB",
+	"save_html": false,
+	"output_file_path": "",
+	"charset": "UTF-8",
+	"selenium_driver_name": "chrome",
+	"selenium_headless": false,
+	"scenario": [
+		{
+			"depth": 0,
+			"action": [
+				{
+					"type": "click",
+					"selector": "#selectSearchTypeBtn",
+					"description" : "검색 타입 선택 드롭다운리스트"
+				},
+				{
+					"type": "click",
+					"selector": "#btnSelPat02",
+					"description" : "특허,실용신안 으로 선택"
+				},
+				{
+					"type": "input",
+					"selector": "#searchKeyword",
+					"value" : "<%keyword%>",
+					"description" : "검색어 입력"
+				},
+				{
+					"type": "click",
+					"selector": "#initSearchResultPageFrmNewBookMark",
+					"description" : "검색"
+				},
+				{
+					"type": "click",
+					"selector": "#btnTextView > button",
+					"description" : "요약 보이는 페이지구성으로 변경"
+				},
+				{
+					"type": "click",
+					"selector": "select#opt28",
+					"description" : "검색결과 개수 선택 드롭다운리스트"
+				},
+				{
+					"type": "click",
+					"selector": "select#opt28 > option:nth-child(3)",
+					"description" : "90개선택"
+				},
+				{
+					"type": "click",
+					"selector": "#pageSel > a",
+					"target_depth": 1,
+					"description" : "검색 개수 반영 버튼"
+				}	
+			]
+		},
+		{
+			"depth": 1,
+			"action": [
+				{
+					"type": "start_monitor_ajax",
+					"description" : "여기서부터 페이지 새로고침 일어나지 않음"
+				},
+				{
+					"type": "wait_ajax",
+					"description" : "페이지 변경은 ajax기반이기 때문에 페이지 콘텐츠 변경을 기다림"
+				},
+				{
+					"type" : "parse_contents",
+					"selector" : "section.search_section",
+					"contents_depth" : 0
+				},
+				{
+					"type" : "click",
+					"selector" : "#divBoardPager > strong+a",
+					"try_refresh" : 3,
+					"target_depth": 1,
+					"description" : "다음 페이지 버튼"
+				}
+				
+			]
+		}
+	],
+	"collect_recode": [
+		{
+			"depth": 0,
+			"name": "kipris_data3",
+			"recode_selector": ".search_section > article",
+			"insert_or_update" : true,
+			"column": [
+				{
+					"type": "text",
+					"data_type": "varchar(300)",
+					"data_name": "keyword",
+					"value": "<%keyword%>"
+				},
+				{
+					"data_type": "varchar(20)",
+					"data_name": "application_number",
+					"description": "출원번호",
+					"key": true,
+					"element": [
+						{
+							"from_root": false,
+							"selector": "ul > li:nth-child(2) > span.point01 > a",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(20)",
+					"data_name": "registration_number",
+					"description": "등록번호",
+					"allow_null" : true,
+					"element": [
+						{
+							"from_root": false,
+							"selector": "ul > li:nth-child(5) > span.point01 > a",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(20)",
+					"data_name": "state",
+					"allow_null" : true,
+					"element": [
+						{
+							"from_root": false,
+							"selector": "#iconStatus",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "text",
+					"data_name": "title",
+					"regex_filter": [],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "div.search_section_title > h1 > a:nth-child(2)",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(300)",
+					"data_name": "applicant",
+					"description" : "출원인",
+					"regex_filter": [],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "ul > li.left_width.letter1 > a > font",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(300)",
+					"data_name": "inventor",
+					"description" : "발명자",
+					"regex_filter": [],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "ul > li.left_width.txt_inventor > font",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(300)",
+					"data_name": "application_date",
+					"regex_filter": ["[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}"],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "article > div > ul > li:nth-child(3)",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(300)",
+					"data_name": "registration_date",
+					"regex_filter": ["[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}"],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "article > div > ul > li:nth-child(6)",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "longtext",
+					"data_name": "abstract",
+					"regex_filter": [],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "div.search_basic_info > div > div",
+							"type": "text"
+						}
+					]
+				}
+			]
+		}
+	]
+}
