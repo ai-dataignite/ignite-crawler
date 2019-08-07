@@ -1,5 +1,6 @@
 {
 	"name": "kipris",
+	"description" : "특허청 실용신안 콘텐츠 크롤링",
 	"seed": {
 		"url": "http://kportal.kipris.or.kr/kportal/search/search_patent.do",
 		"type": "GET",
@@ -69,11 +70,12 @@
 			"action": [
 				{
 					"type": "sleep",
-					"value": "2"
+					"value": "2",
+					"description" : "슬립 2초"
 				},
 				{
 					"type": "start_monitor_ajax",
-					"description" : "여기서부터 페이지 새로고침 일어나지 않음"
+					"description" : "ajax 로딩 대기 시작. 반복적으로 수행하는 이유는 페이저 버튼에서 새로고침할 가능성이 있기 때문에 반복수행"
 				},
 				{
 					"type": "wait_ajax",
@@ -89,7 +91,7 @@
 					"selector" : "#divBoardPager > strong+a",
 					"try_refresh" : 3,
 					"target_depth": 1,
-					"description" : "다음 페이지 버튼"
+					"description" : "다음 페이지 버튼. 서버 불안정으로 인해서 로딩이 오래 걸릴때를 대비하여 새로고침 3번 진행"
 				}
 				
 			]
@@ -100,18 +102,19 @@
 			"depth": 0,
 			"name": "kipris_data4",
 			"recode_selector": ".search_section > article",
+			"description": "한페이지에서  90개가량의 콘텐츠를 수집하는 방식이 때문에 90개의 콘텐츠를 구분할수 있는 recode_selector 설정이 중요함",
 			"insert_or_update" : false,
 			"column": [
 				{
 					"type": "text",
 					"data_type": "varchar(300)",
 					"data_name": "keyword",
-					"value": "<%keyword%>"
+					"value": "<%keyword%>",
+					"description": "검색어 키워드"
 				},
 				{
 					"data_type": "varchar(20)",
 					"data_name": "application_number",
-					"description": "출원번호",
 					"key": true,
 					"element": [
 						{
@@ -119,12 +122,12 @@
 							"selector": "ul > li:nth-child(2) > span.point01 > a",
 							"type": "text"
 						}
-					]
+					],
+					"description": "출원번호"
 				},
 				{
 					"data_type": "varchar(20)",
 					"data_name": "registration_number",
-					"description": "등록번호",
 					"allow_null" : true,
 					"element": [
 						{
@@ -132,7 +135,8 @@
 							"selector": "ul > li:nth-child(5) > span.point01 > a",
 							"type": "text"
 						}
-					]
+					],
+					"description": "등록번호"
 				},
 				{
 					"data_type": "varchar(20)",
@@ -144,7 +148,8 @@
 							"selector": "#iconStatus",
 							"type": "text"
 						}
-					]
+					],
+					"description": "특허 상태"
 				},
 				{
 					"data_type": "text",
@@ -156,12 +161,12 @@
 							"selector": "div.search_section_title > h1 > a:nth-child(2)",
 							"type": "text"
 						}
-					]
+					],
+					"description": "특허제목"
 				},
 				{
 					"data_type": "varchar(300)",
 					"data_name": "applicant",
-					"description" : "출원인",
 					"regex_filter": [],
 					"element": [
 						{
@@ -169,12 +174,12 @@
 							"selector": "ul > li.left_width.letter1 > a > font",
 							"type": "text"
 						}
-					]
+					],
+					"description": "출원인"
 				},
 				{
 					"data_type": "varchar(300)",
 					"data_name": "inventor",
-					"description" : "발명자",
 					"regex_filter": [],
 					"element": [
 						{
@@ -182,7 +187,8 @@
 							"selector": "ul > li.left_width.txt_inventor > font",
 							"type": "text"
 						}
-					]
+					],
+					"description": "발명자"
 				},
 				{
 					"data_type": "varchar(300)",
@@ -194,7 +200,8 @@
 							"selector": "article > div > ul > li:nth-child(3)",
 							"type": "text"
 						}
-					]
+					],
+					"description": "출원날짜"
 				},
 				{
 					"data_type": "varchar(300)",
@@ -206,7 +213,8 @@
 							"selector": "article > div > ul > li:nth-child(6)",
 							"type": "text"
 						}
-					]
+					],
+					"description": "등록날짜"
 				},
 				{
 					"data_type": "longtext",
@@ -218,7 +226,8 @@
 							"selector": "div.search_basic_info > div > div",
 							"type": "text"
 						}
-					]
+					],
+					"description": "요약"
 				}
 			]
 		}
