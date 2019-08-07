@@ -70,7 +70,7 @@ public class SeleniumScraper implements Scraper {
 			+ "}";
 	static final String JAVASCRIPT_IS_LOADING_AJAX = "return Object.keys(sbc_loading_ajax).length";
 	
-	final int DEFAULT_AJAX_LOAD_TIMEOUT_MS = 3000;
+	final int DEFAULT_AJAX_LOAD_TIMEOUT_MS = 30000;
 	final int DEFAULT_PAGE_LOAD_TIMEOUT_SEC = 30;
 	
 	public SeleniumScraper(Config config) {
@@ -142,29 +142,26 @@ public class SeleniumScraper implements Scraper {
 					}
 
 					if (action.getType().equalsIgnoreCase(Action.TYPE_CLICK)) {
-						
 						// 셀레니움 액션 이벤트로 페이지 로딩이 발생할 경우 로딩이 완료 될때까지 블록에 걸림
 						int timeout_sec = DEFAULT_PAGE_LOAD_TIMEOUT_SEC;
 						int try_reload = action.getTryRefresh();
 						boolean isLoaded= false;
-						
 						try {
 							mSeleniumDriver.manage().timeouts().pageLoadTimeout(timeout_sec, TimeUnit.SECONDS);
 							we.click();
 							isLoaded = true;
 						}catch(org.openqa.selenium.TimeoutException e) {
 						}
-						if (!isLoaded) {
+						if (try_reload > 0 && !isLoaded) {
+							SessionId session_id = ((RemoteWebDriver)mSeleniumDriver).getSessionId();
+							HttpCommandExecutor executor = (HttpCommandExecutor) ((RemoteWebDriver)mSeleniumDriver).getCommandExecutor();
 							for(int i = 0 ; i < try_reload ; i++) {
-								System.err.println("try refresh ..." + (i+1));
+								System.err.println("try refresh ..." + (i+1) + "/" + try_reload);
 								timeout_sec *= 2;
-								
-								SessionId session_id = ((RemoteWebDriver)mSeleniumDriver).getSessionId();
-								HttpCommandExecutor executor = (HttpCommandExecutor) ((RemoteWebDriver)mSeleniumDriver).getCommandExecutor();
+								// timeout 후에 driver 객체를 다시만들어줘야 정상작동하기 때문에, 인스턴스를 새로만들고 세션을 복사하는 절차를 진행
 								mSeleniumDriver = createDriverFromSession(session_id, executor.getAddressOfRemoteServer());
 								mSeleniumDriver.manage().timeouts().pageLoadTimeout(timeout_sec, TimeUnit.SECONDS);
 								try {
-									System.err.println("exc refresh");
 									mSeleniumDriver.navigate().refresh();
 									isLoaded = true;
 									break;

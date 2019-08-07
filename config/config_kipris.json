@@ -1,8 +1,5 @@
 {
 	"name": "kipris",
-	"db_id": "root",
-	"db_pw": "1234",
-	"db_path": "mariadb://localhost:3306/DEV_CRAWLER_LOG",
 	"seed": {
 		"url": "http://kportal.kipris.or.kr/kportal/search/search_patent.do",
 		"type": "GET",
@@ -71,6 +68,10 @@
 			"depth": 1,
 			"action": [
 				{
+					"type": "sleep",
+					"value": "2"
+				},
+				{
 					"type": "start_monitor_ajax",
 					"description" : "여기서부터 페이지 새로고침 일어나지 않음"
 				},
@@ -97,9 +98,9 @@
 	"collect_recode": [
 		{
 			"depth": 0,
-			"name": "kipris_data3",
+			"name": "kipris_data4",
 			"recode_selector": ".search_section > article",
-			"insert_or_update" : true,
+			"insert_or_update" : false,
 			"column": [
 				{
 					"type": "text",
