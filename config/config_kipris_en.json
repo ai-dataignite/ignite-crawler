@@ -1,0 +1,170 @@
+{
+	"name": "kipris",
+	"seed": {
+		"url": "http://abpat.kipris.or.kr/abpat/searchLogina.do?next=MainSearch",
+		"type": "GET",
+		"data": []
+	},
+	"ignore_robots": true,
+	"crawling_max_depth": -1,
+	"crawling_type": "SCENARIO_DYNAMIC",
+	"crawling_delay": 0.5,
+	"crawling_max_count": -1,
+	"contents_save_type": "DB",
+	"save_html": false,
+	"output_file_path": "",
+	"charset": "UTF-8",
+	"selenium_driver_name": "chrome",
+	"selenium_headless": false,
+	"scenario": [
+		{
+			"depth": 0,
+			"action": [
+				{
+					"type": "input",
+					"selector": "#queryText",
+					"value" : "<%keyword%>"
+				},
+				{
+					"type": "start_monitor_ajax",
+					"description" : "ajax 로딩 대기 시작. 반복적으로 수행하는 이유는 페이저 버튼에서 새로고침할 가능성이 있기 때문에 반복수행"
+				},
+				{
+					"type": "click",
+					"selector": "#SearchPara > fieldset > span.input_btn > a",
+				},
+				{
+					"type": "click",
+					"selector": "select#opt28",
+					"description" : "검색결과 개수 선택 드롭다운리스트"
+				},
+				{
+					"type": "click",
+					"selector": "select#opt28 > option:nth-child(3)",
+					"description" : "90개선택"
+				},
+				{
+					"type": "click",
+					"selector": "div.float_right > a",
+					"target_depth": 1,
+					"description" : "검색 개수 반영 버튼"
+				}	
+				
+			]
+		},
+		{
+			"depth": 1,
+			"action": [
+				{
+					"type": "wait_ajax",
+					"description" : "페이지 변경은 ajax기반이기 때문에 페이지 콘텐츠 변경을 기다림"
+				},
+				{
+					"type" : "parse_contents",
+					"selector" : "#divMainArticle > form > section > article > div.search_section_title",
+					"contents_depth": 0
+				},
+				{
+					"type" : "remove_elements",
+					"selector" : "#divMainArticle > form > section > article > div.search_section_title",
+					"value" : "#divMainArticle > form > section > article > div.search_section_title"
+				},
+				{
+					"type" : "click",
+					"selector" : "#divBoardPager > strong+a",
+					"try_refresh" : 3,
+					"target_depth": 1
+				}
+				
+			]
+		}
+	],
+	"collect_recode": [
+		{
+			"depth": 0,
+			"name": "kipris_data_en",
+			"recode_selector": "#divMainArticle > form > section > article",
+			"column": [
+				{
+					"type": "text",
+					"data_type": "varchar(300)",
+					"data_name": "keyword",
+					"value": "<%keyword%>"
+				},
+				{
+					"data_type": "varchar(200)",
+					"data_name": "no",
+					"key": true,
+					"regex_filter": ["[0-9]+"],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "div.search_basic_info.noimg_list > ul > li:nth-child(3)",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(20)",
+					"data_name": "state",
+					"allow_null" : true,
+					"element": [
+						{
+							"from_root": false,
+							"selector": "div.search_section_title > h1 > span > img",
+							"type": "attr=alt"
+						}
+					]
+				},
+				{
+					"data_type": "text",
+					"data_name": "title",
+					"regex_filter": [],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "div.search_section_title > h1 > a",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(300)",
+					"data_name": "writer",
+					"regex_filter": [],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "div.search_basic_info.noimg_list > ul > li:nth-child(11) > font",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(300)",
+					"data_name": "r_date",
+					"regex_filter": ["[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}"],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "div.search_basic_info.noimg_list > ul > li:nth-child(4)",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "longtext",
+					"data_name": "abstract",
+					"regex_filter": [],
+					"element": [
+						{
+							"from_root": false,
+							"selector": "div.search_txt > p.eng_txt",
+							"type": "text"
+						}
+					]
+				}
+			]
+		}
+	]
+}

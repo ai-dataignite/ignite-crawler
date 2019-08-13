@@ -387,7 +387,7 @@ public class Crawler {
 			String work_id = "0";
 			
 			if(work.getAction() != null) {
-				work_id = work.getDepth() +"/"+ work.getAction().getNo();
+				work_id = work.getDepth() +" - "+ work.getAction().getNo();
 			}
 			
 			if(work.result().getErrorList().size() > 0){

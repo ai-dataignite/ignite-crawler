@@ -1,0 +1,150 @@
+{
+	"name": "google_scholar",
+	"seed": {
+		"url": "https://scholar.google.co.kr/scholar?hl=ko&as_sdt=0%2C5",
+		"type": "GET",
+		"data": [
+			{"key": "q", "value": "<%keyword%>"},
+			{"key": "as_ylo", "value": "2000"},
+			{"key":"as_yhi", "value": "2019"}
+		]
+	},
+	"ignore_robots": true,
+	"crawling_max_depth": -1,
+	"crawling_type": "SCENARIO_DYNAMIC",
+	"crawling_delay": 1,
+	"crawling_max_count": -1,
+	"contents_save_type": "DB",
+	"save_html": false,
+	"output_file_path": "",
+	"charset": "UTF-8",
+	"selenium_driver_name": "chrome",
+	"selenium_headless": false,
+	"scenario": [
+		{
+			"depth": 0,
+			"action": [
+				{
+					"type": "click",
+					"selector": "div.cont > p.txt > a",
+					"target_depth": 1
+				},
+				{
+					"type": "click",
+					"selector": "#level4_mainContent > form > div.tabWarp.page > div.tabCont > div > div.passing > span.num > strong + a",
+					"target_depth": 0
+				},
+				{
+					"type": "click",
+					"selector": "a img[alt=\"다음\"]",
+					"target_depth": 0
+				}
+			]
+		},
+		{
+			"depth": 1,
+			"action": [
+				{
+					"type": "javascript",
+					"selector": "#level4_mainContent",
+					"value": "var list = document.getElementsByTagName(\"strong\"); for(var i = 0 ; i < list.length ; i++){ list[i].setAttribute(\"attrText\", list[i].innerText); }"
+				},
+				{
+					"type": "parse_contents",
+					"selector": "#level4_mainContent",
+					"contents_depth": 0
+				},
+				{
+					"type": "backward_window"
+				}
+			]
+		}
+	],
+	"collect_recode": [
+		{
+			"depth": 0,
+			"name": "riss",
+			"recode_selector": "#level4_mainContent",
+			"column": [
+				{
+					"type": "URL",
+					"data_type": "varchar(50)",
+					"data_name": "id",
+					"key": true,
+					"regex_filter": ["(?<=control_no\\=)[A-Za-z0-9_]+(?=\\&)*"]
+				},
+				{
+					"type": "text",
+					"data_type": "varchar(50)",
+					"data_name": "search_keyword",
+					"value": "<%keyword%>"
+				},
+				{
+					"type": "text",
+					"data_type": "varchar(50)",
+					"data_name": "source_site",
+					"value": "RISS"
+				},
+				{
+					"data_type": "text",
+					"data_name": "title",
+					"allow_null": false,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#level4_mainContent > div > div.vTop02 > p.tit",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"type": "text",
+					"data_type": "varchar(50)",
+					"data_name": "category",
+					"value": "단행본"
+				},
+				{
+					"data_type": "varchar(200)",
+					"data_name": "reg_date",
+					"allow_null": false,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "strong[attrtext='발행년도'] + p",
+							"type": "text"
+						},
+						{
+							"from_root": true,
+							"selector": "strong[attrtext='출판년'] + p",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "text",
+					"data_name": "contents",
+					"allow_null": true,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "strong[attrtext='국문 초록 (Abstract)'] + div.tt > ul > li:nth-child(2)",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "text",
+					"data_name": "keyword",
+					"allow_null": true,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "strong[attrtext='주제어'] +p",
+							"type": "text"
+						}
+					]
+				}
+			]
+		}
+	]
+}

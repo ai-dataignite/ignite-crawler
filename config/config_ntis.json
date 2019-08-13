@@ -1,12 +1,12 @@
 {
 	"name": "ntis",
-	"db_id": "root",
-	"db_pw": "1234",
-	"db_path": "mariadb://localhost:3306/DEV_CRAWLER_LOG",
+	"description" : "nits 진행 중 과제(과제공모내용 제외) 정보 크롤링",
 	"seed": {
-		"url": "https://www.ntis.go.kr/ThSearchProjectList.do?gubun=link&searchWord=%ED%95%AD%EA%B3%B5&searchType=&oldSearchWord=%ED%95%AD%EA%B3%B5&resultSearch=&ssoKnfSlct=0&ascDesc=ASC&useYn=N&oldQuery=%ED%95%AD%EA%B3%B5&oldAddQuery=%26SN04%3D2019%7C2013%7C2015%7C2017%7C2011%7C2012%7C2018%7C2016%7C2014%7C2009%7C2010&dbt=project&checkYn=&searchOption16=&pageYn=Y&technologyClassification=ST&directorySearchYear=&directorySearchOption1=&directorySearchOption2=&directorySearchOption3=&downloadTarget=project&startRow=&endRow=&rqstPurpCd=&infoPrctuseDes=&layerChoice=&sort=RANK%2FDESC&pageSize=10&navigation1%5B0%5D=2019&navigation1%5B1%5D=2018&navigation1%5B2%5D=2017&navigation1%5B3%5D=2016&navigation1%5B4%5D=2015&navigation1%5B5%5D=2014&navigation1%5B6%5D=2013&navigation1%5B7%5D=2012&navigation1%5B8%5D=2011&navigation1%5B9%5D=2010&navigation1%5B10%5D=2009",
+		"url": "https://www.ntis.go.kr/ThSearchProjectList.do?gubun=link&searchType=&oldSearchWord=%ED%95%AD%EA%B3%B5&resultSearch=&ssoKnfSlct=0&ascDesc=ASC&useYn=N&oldQuery=%ED%95%AD%EA%B3%B5&oldAddQuery=%26SN04%3D2019%7C2013%7C2015%7C2017%7C2011%7C2012%7C2018%7C2016%7C2014%7C2009%7C2010&dbt=project&checkYn=&searchOption16=&pageYn=Y&technologyClassification=ST&directorySearchYear=&directorySearchOption1=&directorySearchOption2=&directorySearchOption3=&downloadTarget=project&startRow=&endRow=&rqstPurpCd=&infoPrctuseDes=&layerChoice=&sort=RANK%2FDESC&pageSize=10&navigation1%5B0%5D=2019&navigation1%5B1%5D=2018&navigation1%5B2%5D=2017&navigation1%5B3%5D=2016&navigation1%5B4%5D=2015&navigation1%5B5%5D=2014&navigation1%5B6%5D=2013&navigation1%5B7%5D=2012&navigation1%5B8%5D=2011&navigation1%5B9%5D=2010&navigation1%5B10%5D=2009",
 		"type": "GET",
-		"data" : []
+		"data" : [ 
+			{"key" : "searchWord", "value" : "<%keyword%>"}
+		]
 	},
 	"ignore_robots": true,
 	"crawling_max_depth": -1,
@@ -25,7 +25,8 @@
 			"action": [
 				{
 					"type": "click",
-					"selector": "#gnbArea > button.login"
+					"selector": "#gnbArea > button.login",
+					"description": "로그인 페이지 접속(새창)"
 				},
 				{
 					"type": "switch_window",
@@ -34,12 +35,14 @@
 				{
 					"type": "input",
 					"selector": "body > div > form > label:nth-child(2) > input",				
-					"value": "<%id%>"
+					"value": "<%id%>",
+					"description": "아이디 입력"
 				},
 				{
 					"type": "input",
 					"selector": "body > div > form > label:nth-child(5) > input",				
-					"value": "<%password%>"
+					"value": "<%password%>",
+					"description": "패스워드 입력"
 				},
 				{
 					"type": "click",

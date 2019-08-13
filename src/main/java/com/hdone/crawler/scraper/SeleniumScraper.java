@@ -360,7 +360,7 @@ public class SeleniumScraper implements Scraper {
 		}
 		if (work.getAction() != null) {
 			mLogger.info("depth " + work.getDepth() 
-								  + "/" + work.getAction().getNo()
+								  + " @ " + work.getAction().getNo()
 								  + ", " + work.getAction().getType() 
 								  + ", " + work.toString());
 		} else {
