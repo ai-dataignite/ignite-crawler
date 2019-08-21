@@ -25,7 +25,7 @@ public class DBWriter implements Writer {
 	Config mConfig;
 
 	static String DRIVER = "org.mariadb.jdbc.Driver";
-	static String PATH = "jdbc:mariadb://localhost:3306/DEV_CRAWLER_LOG"; // 172.17.0.10
+	static String PATH = "jdbc:mariadb://localhost:3306/DEV_CRAWLER_LOG"; 
 	static String USER = "root";
 	static String PW = "1234";
 

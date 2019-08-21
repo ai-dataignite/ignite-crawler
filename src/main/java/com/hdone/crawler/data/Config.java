@@ -539,7 +539,7 @@ public class Config {
 //			"notification": {
 //				"type" : "email",
 //				"from" : {"email": "gmanhdh@gmail.com", "name": "HandhCrawler", "password": "<%email_pwd%>"},
-//				"to" : {"email": "handh@onycom.com", "name": "done"}
+//				"to" : {"email": "", "name": "done"}
 //			}, 
 			
 			if(!root.isNull(KEY_NOTIFICATION)){
