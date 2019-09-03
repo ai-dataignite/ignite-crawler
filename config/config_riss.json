@@ -1,12 +1,12 @@
 {
-	"name": "google_scholar",
+	"name": "riss",
 	"seed": {
-		"url": "https://scholar.google.co.kr/scholar?hl=ko&as_sdt=0%2C5",
+		"url": "http://www.riss.kr/search/Search.do?detailSearch=&viewYn=OP",
 		"type": "GET",
 		"data": [
-			{"key": "q", "value": "<%keyword%>"},
-			{"key": "as_ylo", "value": "2000"},
-			{"key":"as_yhi", "value": "2019"}
+			{"key": "query", "value": "<%keyword%>"},
+			{"key": "colName", "value": "bib_t", "description" : "카테고리 : re_a_kor 국내학술지, bib_t 학위논문"},
+			{"key":"exQuery", "value": "pyear:2019|2018|2017|2016|2015|2014|2013|2012|2011|2010|2009|2008|2007|2006|2005|2004|2003|2002|2001|2000^"}
 		]
 	},
 	"ignore_robots": true,
