@@ -367,7 +367,6 @@ public class Crawler {
 			if(!ret){
 				mLogger.info("============== Terminate Crawler =============");
 				mLogger.error("Can't start Crawler. Initialization failed.");
-				
 				CrawlerLog.WriteProgress(String.format("%s,%s,%d,%d,%d,%d", 
 						"start_failed",
 						Util.GetElapedTime(mConfig.getStartTime()), 

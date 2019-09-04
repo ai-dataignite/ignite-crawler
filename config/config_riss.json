@@ -4,9 +4,8 @@
 		"url": "http://www.riss.kr/search/Search.do?detailSearch=&viewYn=OP",
 		"type": "GET",
 		"data": [
-			{"key": "query", "value": "<%keyword%>"},
-			{"key": "colName", "value": "bib_t", "description" : "카테고리 : re_a_kor 국내학술지, bib_t 학위논문"},
-			{"key":"exQuery", "value": "pyear:2019|2018|2017|2016|2015|2014|2013|2012|2011|2010|2009|2008|2007|2006|2005|2004|2003|2002|2001|2000^"}
+			{"key": "query", "value": "<%keyword%>", "description": "다중키워드 검색시  | 문자로 or 기능을 수행함 "},
+			{"key": "colName", "value": "bib_t", "description" : "카테고리 : re_a_kor 국내학술지, bib_t 학위논문"}
 		]
 	},
 	"ignore_robots": true,
@@ -25,19 +24,30 @@
 			"depth": 0,
 			"action": [
 				{
+					"type": "javascript",
+					"selector": "#lnb02_g2 > a",
+					"value" : "var start=<%from_date%>, end=<%to_date%>; start = start.toString().substr(0,4); end= end.toString().substr(0,4); for( i = start; i <= end ; i++){ e = document.querySelector(\"input[name='c_use_pyear'][value='\"+i+\"']\"); if (e) e.checked = true; }",
+					"description": "날짜를 직접 수정하고 싶기 때문에 자바스크립트로 구현함"
+				},
+				{
 					"type": "click",
-					"selector": "div.cont > p.txt > a",
+					"selector": "#lnb > li:nth-child(3) > span > a > img",
 					"target_depth": 1
 				},
 				{
 					"type": "click",
-					"selector": "#level4_mainContent > form > div.tabWarp.page > div.tabCont > div > div.passing > span.num > strong + a",
-					"target_depth": 0
+					"selector": "#lnb > li.lnb01 > ul > li:nth-child(3) > a"
+				},
+				{
+					"type": "javascript",
+					"selector": "#lnb02_g2 > a",
+					"value" : "var start=<%from_date%>, end=<%to_date%>; start = start.toString().substr(0,4); end= end.toString().substr(0,4); for( i = start; i <= end ; i++){ e = document.querySelector(\"input[name='c_use_pyear'][value='\"+i+\"']\"); if (e) e.checked = true; }",
+					"description": "날짜를 직접 수정하고 싶기 때문에 자바스크립트로 구현함"
 				},
 				{
 					"type": "click",
-					"selector": "a img[alt=\"다음\"]",
-					"target_depth": 0
+					"selector": "#lnb > li:nth-child(3) > span > a > img",
+					"target_depth": 1
 				}
 			]
 		},
@@ -45,9 +55,30 @@
 			"depth": 1,
 			"action": [
 				{
+					"type": "click",
+					"selector": "div.cont > p.txt > a",
+					"target_depth": 2
+				},
+				{
+					"type": "click",
+					"selector": "#level4_mainContent > form > div.tabWarp.page > div.tabCont > div > div.passing > span.num > strong + a",
+					"target_depth": 1
+				},
+				{
+					"type": "click",
+					"selector": "a img[alt=\"다음\"]",
+					"target_depth": 1
+				}
+			]
+		},
+		{
+			"depth": 2,
+			"action": [
+				{
 					"type": "javascript",
 					"selector": "#level4_mainContent",
-					"value": "var list = document.getElementsByTagName(\"strong\"); for(var i = 0 ; i < list.length ; i++){ list[i].setAttribute(\"attrText\", list[i].innerText); }"
+					"value": "var list = document.getElementsByTagName(\"strong\"); for(var i = 0 ; i < list.length ; i++){ list[i].setAttribute(\"attrText\", list[i].innerText); }",
+					"description": "태그에 id 또는 class와 같은 고유 식별자가 없어서 text값을 고유 식별자로 활용하기 위하여 태그 속성으로 넣음"
 				},
 				{
 					"type": "parse_contents",
@@ -65,6 +96,7 @@
 			"depth": 0,
 			"name": "riss",
 			"recode_selector": "#level4_mainContent",
+			"inser_or_update" : true,
 			"column": [
 				{
 					"type": "URL",

@@ -44,6 +44,68 @@
 				},
 				{
 					"type": "click",
+					"selector": "#ToggleSmartFinder"
+				},
+				{
+					"type": "input",
+					"selector": "#AD_FROM",
+					"value": "<%from_date%>",
+					"dscription": "yyyymmdd 출원일 시작"
+				},
+				{
+					"type": "input",
+					"selector": "#AD_TO",
+					"value": "<%to_date%>",
+					"dscription": "yyyymmdd 출원일 끝"
+				},
+				{
+					"type": "select",
+					"selector": "#operate10",
+					"value": "or",
+					"dscription": "검색옵션 or 선택"
+				},
+				{
+					"type": "input",
+					"selector": "#GD_FROM",
+					"value": "<%from_date%>",
+					"dscription": "yyyymmdd 출원일 시작"
+				},
+				{
+					"type": "input",
+					"selector": "#GD_TO",
+					"value": "<%to_date%>",
+					"dscription": "yyyymmdd 출원일 끝"
+				},
+				{
+					"type": "select",
+					"selector": "#operate11",
+					"value": "or",
+					"dscription": "검색옵션 or 선택"
+				},
+				{
+					"type": "input",
+					"selector": "#OPD_FROM",
+					"value": "<%from_date%>",
+					"dscription": "yyyymmdd 출원일 시작"
+				},
+				{
+					"type": "input",
+					"selector": "#OPD_TO",
+					"value": "<%to_date%>",
+					"dscription": "yyyymmdd 출원일 끝"
+				},
+				{
+					"type": "select",
+					"selector": "#operate12",
+					"value": "or",
+					"dscription": "검색옵션 or 선택"
+				},
+				{
+					"type": "click",
+					"selector": "#btnItemizedSearch"
+				},
+				{
+					"type": "click",
 					"selector": "#btnTextView > button",
 					"description" : "요약 보이는 페이지구성으로 변경"
 				},
@@ -103,7 +165,7 @@
 			"name": "kipris_data4",
 			"recode_selector": ".search_section > article",
 			"description": "한페이지에서  90개가량의 콘텐츠를 수집하는 방식이 때문에 90개의 콘텐츠를 구분할수 있는 recode_selector 설정이 중요함",
-			"insert_or_update" : false,
+			"inser_or_update" : true,
 			"column": [
 				{
 					"type": "text",

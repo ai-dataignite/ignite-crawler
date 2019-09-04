@@ -3,6 +3,9 @@ package com.hdone.SettingBasedCrawler;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.security.CodeSource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Hello world!
@@ -37,6 +40,31 @@ public class App
     	}
     	
     	if (!ArgumentData.Parse(args)) return;
+    	
+		// ap 프로젝트를 위한 커스텀 구문
+    	// from_date 와 to_date 필수 yyyyMMdd (없다면 현재시간으로 지정)
+    	// 
+		if(ArgumentData.sMapParams != null) {
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); 
+			String strTime = sdf.format(cal.getTime());
+			if(ArgumentData.sMapParams.get("from_date") == null) {
+				// from_date 가 없다면 현재월의 1일부터 크롤링 시작
+				ArgumentData.sMapParams.put("from_date", strTime.substring(0,6)+"01");
+			}
+			if(ArgumentData.sMapParams.get("to_date") == null) {
+				ArgumentData.sMapParams.put("to_date", strTime);
+			}
+			try {
+				if(sdf.parse(ArgumentData.sMapParams.get("from_date")).getTime() > sdf.parse(ArgumentData.sMapParams.get("to_date")).getTime()) {
+					String tmp = ArgumentData.sMapParams.get("from_date");
+					ArgumentData.sMapParams.put("from_date", ArgumentData.sMapParams.get("to_date"));
+					ArgumentData.sMapParams.put("to_date", tmp);
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
     	
     	Crawler c = new Crawler(1, 0);
     	boolean ready = c.setConfig(ArgumentData.sConfigType, 

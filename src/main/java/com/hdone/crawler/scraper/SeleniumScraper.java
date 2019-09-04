@@ -190,14 +190,15 @@ public class SeleniumScraper implements Scraper {
 						jse.executeScript("window.scrollTo(0," + value + ")", "");
 					} else if (action.getType().equalsIgnoreCase(Action.TYPE_SELECT) && value != null) {
 						Select dropdown = new Select(we);
-						try {
-							int intValue = Integer.parseInt(value);
-							dropdown.selectByIndex(intValue);
-						} catch (NumberFormatException e) { // exception 이라면
-							// String 이므로 String
-							// 처리
-							dropdown.selectByValue(value);
-						}
+						dropdown.selectByVisibleText(value);
+//						try {
+//							int intValue = Integer.parseInt(value);
+//							dropdown.selectByIndex(intValue);
+//						} catch (NumberFormatException e) { // exception 이라면
+//							// String 이므로 String
+//							// 처리
+//							
+//						}
 					} else if (action.getType().equalsIgnoreCase(Action.TYPE_JAVASCRIPT) && value != null) {
 						JavascriptExecutor jse = (JavascriptExecutor) mSeleniumDriver;
 //                        Iterator<String> it = mJSData.keySet().iterator();
@@ -236,6 +237,8 @@ public class SeleniumScraper implements Scraper {
 					}
 
 					if (action.getTargetDepth() != -1) {
+						// 신규 타켓에 대한 설정
+						// action 파서에게 새로운 depth 로 이동해서 파싱하라고 명시함
 						work.setParseType(Work.PARSE_SCENARIO);
 						work.setDepth(action.getTargetDepth());
 					}
@@ -343,7 +346,10 @@ public class SeleniumScraper implements Scraper {
 				}
 
 				if (action.getTargetDepth() != -1) {
+					// 신규 타켓에 대한 설정
+					// action 파서에게 새로운 depth 로 이동해서 파싱하라고 명시함
 					work.setParseType(Work.PARSE_SCENARIO);
+					work.setDepth(action.getTargetDepth());
 					ret = Jsoup.parse(mSeleniumDriver.getPageSource());
 				} else {
 					ret = null;
@@ -360,7 +366,7 @@ public class SeleniumScraper implements Scraper {
 		}
 		if (work.getAction() != null) {
 			mLogger.info("depth " + work.getDepth() 
-								  + " @ " + work.getAction().getNo()
+								  + " - " + work.getAction().getNo()
 								  + ", " + work.getAction().getType() 
 								  + ", " + work.toString());
 		} else {
