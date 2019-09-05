@@ -113,6 +113,11 @@
 					"description": "콘텐츠 페이지의 로딩이 오래 걸리는 경우 발생. 30초간 안보일경우 새로고침하는 기능 수행"
 				},
 				{
+					"type": "javascript",
+					"selector": "#divSummary > table > tbody",
+					"value": "var e = document.querySelectorAll('#divSummary > table > tbody > tr > th'); for ( i = 0 ; i < 3 ; i++){ e[i].parentElement.setAttribute('type', 'content'); }"
+				},
+				{
 					"type": "parse_contents",
 					"selector": "#divSummary > table > tbody",
 					"contents_depth" : 1
@@ -142,6 +147,12 @@
 						}
 					]
 				
+				},
+				{
+					"type": "text",
+					"data_type": "varchar(100)",
+					"data_name": "search_keyword",
+					"value": "<%keyword%>"
 				},
 				{
 					"type": "text",
@@ -203,11 +214,24 @@
 					"data_type": "text",
 					"data_name": "contents",
 					"allow_null": false,
-					"description": "연구목표, 연구내용, 연구효과, 키워드(한글, 영문) 모두 하나의 컬럼으로 저장",
+					"description": "연구목표, 연구내용, 연구효과 모두 하나의 컬럼으로 저장",
 					"element": [
 						{
 							"from_root": true,
-							"selector": "#divSummary > table > tbody",
+							"selector": "#divSummary > table > tbody > tr[type='content'] + tr",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "text",
+					"data_name": "keyword",
+					"allow_null": false,
+					"description": "키워드",
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#divSummary > table > tbody > tr:nth-child(7) > td",
 							"type": "text"
 						}
 					]
