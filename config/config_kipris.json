@@ -32,10 +32,16 @@
 					"description" : "특허,실용신안 으로 선택"
 				},
 				{
-					"type": "input",
+					"type": "javscript",
 					"selector": "#searchKeyword",
 					"value" : "<%keyword%>",
 					"description" : "검색어 입력"
+				},
+				{
+					"type": "javscript",
+					"selector": "#searchKeyword",
+					"value":"var v = ('<%keyword%>').toString().split(',').join('+'); document.querySelector('#searchKeyword').value=v;",
+					"description": "검색어 입력. 다중키워드 검색시  +(or) 기능을 수행하기 위해서  ,(콤마) 문자를 사용한 경우 치환함 "
 				},
 				{
 					"type": "click",

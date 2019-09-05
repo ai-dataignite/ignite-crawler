@@ -100,7 +100,7 @@ public class SeleniumScraper implements Scraper {
 			if (selector != null) {
 				wes = waitingForAllElements(mSeleniumDriver, action.getWaitTime(), selector, empty_selector);
 				if (wes == null) { // 못찾음
-					// mLogger.error("Not found element : " + selector);
+					mLogger.error("Not found element : " + selector);
 					work.result().addError(Work.Error.ERR_ACTION, selector, null);
 					work.setURL(mSeleniumDriver.getCurrentUrl());
 					return null;

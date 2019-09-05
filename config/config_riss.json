@@ -1,12 +1,8 @@
 {
 	"name": "riss",
 	"seed": {
-		"url": "http://www.riss.kr/search/Search.do?detailSearch=&viewYn=OP",
-		"type": "GET",
-		"data": [
-			{"key": "query", "value": "<%keyword%>", "description": "다중키워드 검색시  | 문자로 or 기능을 수행함 "},
-			{"key": "colName", "value": "bib_t", "description" : "카테고리 : re_a_kor 국내학술지, bib_t 학위논문"}
-		]
+		"url": "http://www.riss.kr/search/Search.do?detailSearch=false&searchGubun=true&oldQuery=&query=%EB%B9%85%EB%8D%B0%EC%9D%B4%ED%84%B0&x=18&y=15#redirect",
+		"type": "GET"
 	},
 	"ignore_robots": true,
 	"crawling_max_depth": -1,
@@ -24,30 +20,50 @@
 			"depth": 0,
 			"action": [
 				{
-					"type": "javascript",
-					"selector": "#lnb02_g2 > a",
-					"value" : "var start=<%from_date%>, end=<%to_date%>; start = start.toString().substr(0,4); end= end.toString().substr(0,4); for( i = start; i <= end ; i++){ e = document.querySelector(\"input[name='c_use_pyear'][value='\"+i+\"']\"); if (e) e.checked = true; }",
-					"description": "날짜를 직접 수정하고 싶기 때문에 자바스크립트로 구현함"
-				},
-				{
-					"type": "click",
-					"selector": "#lnb > li:nth-child(3) > span > a > img",
-					"target_depth": 1
-				},
-				{
-					"type": "click",
-					"selector": "#lnb > li.lnb01 > ul > li:nth-child(3) > a"
+					"type":"click",
+					"selector": "#TopSearch > div > fieldset > p > span > a:nth-child(1)",
+					"description" : "상세검색"
 				},
 				{
 					"type": "javascript",
-					"selector": "#lnb02_g2 > a",
-					"value" : "var start=<%from_date%>, end=<%to_date%>; start = start.toString().substr(0,4); end= end.toString().substr(0,4); for( i = start; i <= end ; i++){ e = document.querySelector(\"input[name='c_use_pyear'][value='\"+i+\"']\"); if (e) e.checked = true; }",
-					"description": "날짜를 직접 수정하고 싶기 때문에 자바스크립트로 구현함"
+					"selector": "#keyword1",
+					"value":"var v = ('<%keyword%>').toString().split(',').join('|'); console.log(v); document.querySelector('#keyword1').value=v;",
+					"description": "검색어 입력. 다중키워드 검색시  | 문자로 or 기능을 수행하기 위해서  ,(콤마) 문자를 사용한 경우 치환함 "
+				},
+				{
+					"type": "javascript",
+					"selector": "#p_year1",
+					"value" : "var v=<%from_date%>; v = v.toString().substr(0,4); document.querySelector('#p_year1').value=v;",
+					"description": "검색 시작년도. 년도를 직접 수정하고 싶기 때문에 자바스크립트로 구현함"
+				},
+				{
+					"type": "javascript",
+					"selector": "#p_year2",
+					"value" : "var v=<%to_date%>; v = v.toString().substr(0,4); document.querySelector('#p_year2').value=v;",
+					"description": "검색 종료년도. 날짜를 직접 수정하고 싶기 때문에 자바스크립트로 구현함"
 				},
 				{
 					"type": "click",
-					"selector": "#lnb > li:nth-child(3) > span > a > img",
-					"target_depth": 1
+					"selector": "#searchForm_field3 > input.btn",
+					"description": "검색"
+				},
+				{
+					"type": "click",
+					"selector": "#lnb > li.lnb01 > ul > li:nth-child(8) > a",
+					"target_depth": 1,
+					"description": "연구보고서"
+				},
+				{
+					"type": "click",
+					"selector": "#lnb > li.lnb01 > ul > li:nth-child(2) > a",
+					"target_depth": 1,
+					"description": "학위논문"
+				},
+				{
+					"type": "click",
+					"selector": "#lnb > li.lnb01 > ul > li:nth-child(3) > a",
+					"target_depth": 1,
+					"description": "국내학술지논문"
 				}
 			]
 		},
@@ -55,24 +71,39 @@
 			"depth": 1,
 			"action": [
 				{
-					"type": "click",
-					"selector": "div.cont > p.txt > a",
-					"target_depth": 2
-				},
-				{
-					"type": "click",
-					"selector": "#level4_mainContent > form > div.tabWarp.page > div.tabCont > div > div.passing > span.num > strong + a",
-					"target_depth": 1
+					"type": "sleep",
+					"selector": "#level4_mainContent > form > div.tabWarp.page > div.tabCont > div > div.UnifiedSearch",
+					"value": "0.5",
+					"target_depth": 2,
+					"description": "콘텐츠가 있으면 콘텐츠 파싱 depth 로 이동"
 				},
 				{
 					"type": "click",
 					"selector": "a img[alt=\"다음\"]",
-					"target_depth": 1
+					"target_depth": 1,
+					"description": "페이지 [다음]버튼"
 				}
 			]
 		},
 		{
 			"depth": 2,
+			"action": [
+				{
+					"type": "click",
+					"selector": "div.cont > p.txt > a",
+					"target_depth": 3,
+					"description": "콘텐츠 페이지 이동"
+				},
+				{
+					"type": "click",
+					"selector": "#level4_mainContent > form > div.tabWarp.page > div.tabCont > div > div.passing > span.num > strong + a",
+					"target_depth": 2,
+					"description": "현재 페이지 +1 페이지 이동"
+				}
+			]
+		},
+		{
+			"depth": 3,
 			"action": [
 				{
 					"type": "javascript",
@@ -130,10 +161,15 @@
 					]
 				},
 				{
-					"type": "text",
 					"data_type": "varchar(50)",
 					"data_name": "category",
-					"value": "단행본"
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#lnb > li.lnb01 > ul > li.selected > a",
+							"type": "text"
+						}
+					]
 				},
 				{
 					"data_type": "varchar(200)",
