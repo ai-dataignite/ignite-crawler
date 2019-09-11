@@ -93,17 +93,14 @@ public class ScenarioDynamicParser extends DefaultParser {
 			}
 		} 
 		/* root 거나 target_depth가 발견되면 해당 depth의 시나리오 패턴을 워크로 만드는 작업 수행 */
-		else if (urlInfo.getParseType() == Work.PARSE_SCENARIO) {
+		else if (urlInfo.getAction() != null && urlInfo.getParseType() ==  Work.PARSE_SCENARIO) {
 			Map<Integer, Scenario> scenarios = getConfig().getScenarios();
-			int curDepth = 0;
-			if(urlInfo.getAction() != null) {
-				curDepth = urlInfo.getDepth();
-			}
+			int targetDepth = urlInfo.getAction().getTargetDepth();
 			if (scenarios != null) {
 				int len = scenarios.size();
 				int target_depth;
-				if (len != 0 && len >= curDepth) {
-					scen = scenarios.get(curDepth);
+				if (len != 0 && len >= targetDepth) {
+					scen = scenarios.get(targetDepth);
 					if (scen == null)
 						return ret;
 					len = scen.getSize();
@@ -126,7 +123,7 @@ public class ScenarioDynamicParser extends DefaultParser {
 														condition,
 														action.getContentsDepth(),
 														action.getTryRefresh()));
-						newUrlInfo.setDepth(curDepth);
+						newUrlInfo.setDepth(targetDepth);
 						newUrlInfo.getAction().setNo(i);
 						ret.add(newUrlInfo);
 					}

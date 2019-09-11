@@ -90,7 +90,8 @@
 			"action": [
 				{
 					"type": "click",
-					"selector": "div.cont > p.txt > a",
+					"selector": "div.cont > p.txt > a[href*='/search/detail/']",
+					"try_refresh" : "3",
 					"target_depth": 3,
 					"description": "콘텐츠 페이지 이동"
 				},
@@ -125,7 +126,7 @@
 	"collect_recode": [
 		{
 			"depth": 0,
-			"name": "riss",
+			"name": "tm_riss",
 			"recode_selector": "#level4_mainContent",
 			"inser_or_update" : true,
 			"column": [

@@ -98,7 +98,6 @@ public class WorkManager {
 								try {
 									work.setHighPriority(true);
 									mDeque.offerURL(work);
-
 									mDeque.setAccessMode(WorkDeque.WRITE);
 									Work robotsWork = new Work(work.getDomainURL() + Crawler.FILE_NAME_ROBOTS, mConfig.CHARACTER_SET);
 									robotsWork.setScraper(new JsoupScraper()).setParser(new RobotsParser(mConfig));

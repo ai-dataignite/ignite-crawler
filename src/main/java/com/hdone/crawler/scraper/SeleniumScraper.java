@@ -240,7 +240,7 @@ public class SeleniumScraper implements Scraper {
 						// 신규 타켓에 대한 설정
 						// action 파서에게 새로운 depth 로 이동해서 파싱하라고 명시함
 						work.setParseType(Work.PARSE_SCENARIO);
-						work.setDepth(action.getTargetDepth());
+//						work.setDepth(action.getTargetDepth());
 					}
 					
 					work.setURL(mSeleniumDriver.getCurrentUrl());
@@ -349,7 +349,7 @@ public class SeleniumScraper implements Scraper {
 					// 신규 타켓에 대한 설정
 					// action 파서에게 새로운 depth 로 이동해서 파싱하라고 명시함
 					work.setParseType(Work.PARSE_SCENARIO);
-					work.setDepth(action.getTargetDepth());
+//					work.setDepth(action.getTargetDepth());
 					ret = Jsoup.parse(mSeleniumDriver.getPageSource());
 				} else {
 					ret = null;
@@ -362,6 +362,7 @@ public class SeleniumScraper implements Scraper {
 			// window 정보 저장하고
 			work.setParentWindow(mSeleniumDriver.getWindowHandle());
 			work.setParseType(Work.PARSE_SCENARIO);
+			work.setAction(new Action(Action.TYPE_ROOT, 0, null));
 			ret = Jsoup.parse(mSeleniumDriver.getPageSource());
 		}
 		if (work.getAction() != null) {

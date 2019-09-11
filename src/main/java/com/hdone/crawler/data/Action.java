@@ -23,7 +23,8 @@ public class Action{
 	public static String TYPE_SLEEP = "sleep";
 	public static String TYPE_START_MONITOR_AJAX = "start_monitor_ajax";
 	public static String TYPE_WAIT_AJAX = "wait_ajax";
-
+	public static String TYPE_ROOT = "root";
+	
 	/**
 	 * depth 에 따라 시나리오가 흘러감
 	 * 무한루프 주의 필요

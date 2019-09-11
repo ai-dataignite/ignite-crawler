@@ -51,9 +51,13 @@ public class App
 			if(ArgumentData.sMapParams.get("from_date") == null) {
 				// from_date 가 없다면 현재월의 1일부터 크롤링 시작
 				ArgumentData.sMapParams.put("from_date", strTime.substring(0,6)+"01");
+			}else if(ArgumentData.sMapParams.get("from_date").length() == 4) {
+				ArgumentData.sMapParams.put("from_date", (ArgumentData.sMapParams.get("from_date") + "0101"));
 			}
 			if(ArgumentData.sMapParams.get("to_date") == null) {
 				ArgumentData.sMapParams.put("to_date", strTime);
+			}else if (ArgumentData.sMapParams.get("to_date").length() == 4) {
+				ArgumentData.sMapParams.put("to_date", (ArgumentData.sMapParams.get("to_date") + "1231"));
 			}
 			try {
 				if(sdf.parse(ArgumentData.sMapParams.get("from_date")).getTime() > sdf.parse(ArgumentData.sMapParams.get("to_date")).getTime()) {
