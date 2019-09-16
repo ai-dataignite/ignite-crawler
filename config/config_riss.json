@@ -138,6 +138,11 @@
 					"regex_filter": ["(?<=control_no\\=)[A-Za-z0-9_]+(?=\\&)*"]
 				},
 				{
+					"type": "url",
+					"data_type": "text",
+					"data_name": "url",
+				},
+				{
 					"type": "text",
 					"data_type": "varchar(50)",
 					"data_name": "search_keyword",
@@ -146,8 +151,8 @@
 				{
 					"type": "text",
 					"data_type": "varchar(50)",
-					"data_name": "source_site",
-					"value": "RISS"
+					"data_name": "contents_type",
+					"value": "riss"
 				},
 				{
 					"data_type": "text",
@@ -176,6 +181,7 @@
 					"data_type": "varchar(200)",
 					"data_name": "reg_date",
 					"allow_null": false,
+					"regex_filter" : ["[0-9]{4}"],
 					"element": [
 						{
 							"from_root": true,

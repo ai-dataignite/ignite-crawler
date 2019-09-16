@@ -151,7 +151,11 @@
 							"type": "text"
 						}
 					]
-				
+				},
+				{
+					"type": "url",
+					"data_type": "text",
+					"data_name": "url",
 				},
 				{
 					"type": "text",
@@ -162,7 +166,7 @@
 				{
 					"type": "text",
 					"data_type": "varchar(50)",
-					"data_name": "source_site",
+					"data_name": "contents_type",
 					"value": "ntis"
 				},
 				{
@@ -185,6 +189,18 @@
 						{
 							"from_root": true,
 							"selector": "#searchmain > header > div > h2",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"data_type": "varchar(200)",
+					"data_name": "reg_date_yyyymmdd",
+					"allow_null": false,
+					"element": [
+						{
+							"from_root": true,
+							"selector": "#divMain > table.result_table > tbody > tr:nth-child(2) > td:nth-child(4)",
 							"type": "text"
 						}
 					]

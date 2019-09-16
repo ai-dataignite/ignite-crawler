@@ -108,8 +108,19 @@
 					"description": "검색어 키워드"
 				},
 				{
+					"type": "url",
+					"data_type": "text",
+					"data_name": "url",
+				},
+				{
+					"type": "text",
+					"data_type": "varchar(50)",
+					"data_name": "contents_type",
+					"value": "kipris"
+				},
+				{
 					"data_type": "varchar(20)",
-					"data_name": "application_number",
+					"data_name": "id",
 					"key": true,
 					"element": [
 						{
@@ -187,7 +198,7 @@
 				},
 				{
 					"data_type": "varchar(300)",
-					"data_name": "application_date",
+					"data_name": "reg_date",
 					"regex_filter": ["[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}"],
 					"element": [
 						{
