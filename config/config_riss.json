@@ -151,7 +151,7 @@
 				{
 					"type": "text",
 					"data_type": "varchar(50)",
-					"data_name": "contents_type",
+					"data_name": "doc_type",
 					"value": "riss"
 				},
 				{
@@ -197,7 +197,7 @@
 				},
 				{
 					"data_type": "text",
-					"data_name": "contents",
+					"data_name": "content",
 					"allow_null": true,
 					"element": [
 						{

@@ -97,6 +97,10 @@ public class SeleniumScraper implements Scraper {
 			String selector = action.getSelector();
 			String empty_selector = action.getEmptySelector();
 			String value = action.getValue();
+//			Alert alert = mSeleniumDriver.switchTo().alert();
+//			if(alert != null) {
+//				System.err.println("!!!!!!!!!!!!!!!!!!!!!!!");
+//			}
 			if (selector != null) {
 				wes = waitingForAllElements(mSeleniumDriver, action.getWaitTime(), selector, empty_selector);
 				if (wes == null) { // 못찾음
@@ -344,6 +348,7 @@ public class SeleniumScraper implements Scraper {
 						}
 					}
 				}
+				
 
 				if (action.getTargetDepth() != -1) {
 					// 신규 타켓에 대한 설정

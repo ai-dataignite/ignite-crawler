@@ -1,0 +1,3 @@
+[0917/222551.815:ERROR:file_io_win.cc(161)] CreateFile C:\Users\onycom\AppData\Local\Temp\scoped_dir20100_27346\Crashpad\settings.dat: 지정된 경로를 찾을 수 없습니다. (0x3)
+[0917/222551.816:ERROR:file_io_win.cc(170)] CreateFile C:\Users\onycom\AppData\Local\Temp\scoped_dir20100_27346\Crashpad\reports\e34d826f-9c01-4fc9-803d-242e6ec33ec3.dmp: 지정된 경로를 찾을 수 없습니다. (0x3)
+[0917/222551.816:ERROR:crash_report_exception_handler.cc(97)] PrepareNewCrashReport failed

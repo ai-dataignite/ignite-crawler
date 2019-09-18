@@ -16,7 +16,7 @@
 	"output_file_path": "",
 	"charset": "UTF-8",
 	"selenium_driver_name": "chrome",
-	"selenium_headless": false,
+	"selenium_headless": true,
 	"scenario": [
 		{
 			"depth": 0,
@@ -115,7 +115,7 @@
 				{
 					"type": "text",
 					"data_type": "varchar(50)",
-					"data_name": "contents_type",
+					"data_name": "doc_type",
 					"value": "kipris"
 				},
 				{
@@ -224,7 +224,7 @@
 				},
 				{
 					"data_type": "longtext",
-					"data_name": "contents",
+					"data_name": "content",
 					"regex_filter": [],
 					"element": [
 						{
