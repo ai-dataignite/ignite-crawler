@@ -98,7 +98,7 @@
 			"name": "tm_kipris_data",
 			"recode_selector": ".search_section > article",
 			"description": "한페이지에서  90개가량의 콘텐츠를 수집하는 방식이 때문에 90개의 콘텐츠를 구분할수 있는 recode_selector 설정이 중요함",
-			"inser_or_update" : true,
+			"insert_or_update" : true,
 			"column": [
 				{
 					"type": "text",

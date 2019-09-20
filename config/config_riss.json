@@ -128,10 +128,10 @@
 			"depth": 0,
 			"name": "tm_riss",
 			"recode_selector": "#level4_mainContent",
-			"inser_or_update" : true,
+			"insert_or_update" : true,
 			"column": [
 				{
-					"type": "URL",
+					"type": "url",
 					"data_type": "varchar(50)",
 					"data_name": "id",
 					"key": true,

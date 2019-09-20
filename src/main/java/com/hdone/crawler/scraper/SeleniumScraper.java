@@ -298,6 +298,8 @@ public class SeleniumScraper implements Scraper {
 						if (tab_size > new_idx) {
 							mSeleniumDriver.switchTo().window(tab.get(new_idx));
 							mSeleniumDriver.close();
+						}else {
+							System.err.println("not found the window : " + value);
 						}
 					}
 					tab_size = mSeleniumDriver.getWindowHandles().size();

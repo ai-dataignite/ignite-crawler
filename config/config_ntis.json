@@ -125,13 +125,23 @@
 					"value": "var e = document.querySelectorAll('#divSummary > table > tbody > tr > th'); for ( i = 0 ; i < 3 ; i++){ e[i].parentElement.setAttribute('type', 'content'); }"
 				},
 				{
+					"type": "javascript",
+					"selector": "#divMain > table.result_table > tbody > tr:nth-child(2) > td:nth-child(4)",
+					"value": "let e = document.querySelector(arguments[0]); e.textContent = String(e.textContent).replace(/[-~\\s]/gi,'').substr(0, 8)"
+				},
+				{
 					"type": "parse_contents",
 					"selector": "#divSummary > table > tbody",
 					"contents_depth" : 1
 				},
 				{
-					"type": "close_window"
-				}
+					"type": "close_window",
+					"value" : "1"
+				},
+				{
+					"type": "switch_window",
+					"value" : "0"
+				},
 			]
 		}
 	],
@@ -140,7 +150,7 @@
 			"depth": 1,
 			"name": "tm_ntis",
 			"recode_selector": "#divSummary > table > tbody",
-			"inser_or_update" : true,
+			"insert_or_update" : true,
 			"column": [
 				{
 					"data_type": "varchar(50)",
