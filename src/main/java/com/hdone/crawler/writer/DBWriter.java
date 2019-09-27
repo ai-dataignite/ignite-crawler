@@ -25,9 +25,9 @@ public class DBWriter implements Writer {
 	Config mConfig;
 
 	static String DRIVER = "org.mariadb.jdbc.Driver";
-	static String PATH = "jdbc:mariadb://localhost:3306/DEV_CRAWLER_LOG"; 
-	static String USER = "root";
-	static String PW = "1234";
+	static String PATH = ""; 
+	static String USER = "";
+	static String PW = "";
 
 	static final String Q_INSERT_HISTORY = "INSERT INTO T_HISTORY (URL) VALUES (\"%s\")";
 	static final String Q_INSERT_ERR = "INSERT INTO T_ERR_URL (URL,REASON) VALUES (\"%s\", \"%s\")";

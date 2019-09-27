@@ -70,6 +70,9 @@ public class App
 			}
 		}
     	
+
+		
+		
     	Crawler c = new Crawler(1, 0);
     	boolean ready = c.setConfig(ArgumentData.sConfigType, 
     				ArgumentData.sStrConfigURI, 

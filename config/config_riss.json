@@ -1,13 +1,13 @@
 {
 	"name": "riss",
 	"seed": {
-		"url": "http://www.riss.kr/search/Search.do?detailSearch=false&searchGubun=true&oldQuery=&query=%EB%B9%85%EB%8D%B0%EC%9D%B4%ED%84%B0&x=18&y=15#redirect",
+		"url": "http://www.riss.kr/index.do",
 		"type": "GET"
 	},
 	"ignore_robots": true,
 	"crawling_max_depth": -1,
 	"crawling_type": "SCENARIO_DYNAMIC",
-	"crawling_delay": 1,
+	"crawling_delay": 2,
 	"crawling_max_count": -1,
 	"contents_save_type": "DB",
 	"save_html": false,
@@ -21,7 +21,7 @@
 			"action": [
 				{
 					"type":"click",
-					"selector": "#TopSearch > div > fieldset > p > span > a:nth-child(1)",
+					"selector": "#normal > p > strong > a",
 					"description" : "상세검색"
 				},
 				{
@@ -44,7 +44,7 @@
 				},
 				{
 					"type": "click",
-					"selector": "#searchForm_field3 > input.btn",
+					"selector": "#sch3 > input.btn",
 					"description": "검색"
 				},
 				{
@@ -56,15 +56,25 @@
 				{
 					"type": "click",
 					"selector": "#lnb > li.lnb01 > ul > li:nth-child(2) > a",
-					"target_depth": 1,
 					"description": "학위논문"
 				},
 				{
 					"type": "click",
-					"selector": "#lnb > li.lnb01 > ul > li:nth-child(3) > a",
+					"selector": "div.passing > span:nth-child(1) > a",
+					"description" : "페이지가 초기화되지 않는 문제가 있어서 초기화 시켜줌",
 					"target_depth": 1,
+				},
+				{
+					"type": "click",
+					"selector": "#lnb > li.lnb01 > ul > li:nth-child(3) > a",
 					"description": "국내학술지논문"
-				}
+				},
+				{
+					"type": "click",
+					"selector": "div.passing > span:nth-child(1) > a",
+					"description" : "페이지가 초기화되지 않는 문제가 있어서 초기화 시켜줌",
+					"target_depth": 1,
+				},
 			]
 		},
 		{
@@ -98,6 +108,7 @@
 				{
 					"type": "click",
 					"selector": "#level4_mainContent > form > div.tabWarp.page > div.tabCont > div > div.passing > span.num > strong + a",
+					"try_refresh" : "3",
 					"target_depth": 2,
 					"description": "현재 페이지 +1 페이지 이동"
 				}

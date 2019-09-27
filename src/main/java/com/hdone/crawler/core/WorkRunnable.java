@@ -59,7 +59,6 @@ class WorkRunnable implements Runnable{
 	
 	public void run() {
 		mIsRunning = true;
-		boolean isSuccess = false;
 		Work info = mWork;
 		Document doc = null;
 		List<Work> results = null;
@@ -70,7 +69,6 @@ class WorkRunnable implements Runnable{
 				if(mParser != null && doc != null){
 					results = mParser.parse(mWorkDeque.getHistory(), info, doc);
 				}
-				isSuccess = true;
 			} catch (JSONException e) { // javascript 반환 파싱 오류
 				mLogger.error(e.getMessage(), e.fillInStackTrace());
 			} catch (WebDriverException e) { // javascript + element 못찾을때 오류
@@ -84,7 +82,7 @@ class WorkRunnable implements Runnable{
 						info.result().addError(Work.Error.ERR, "not found element [" + info.getAction().getSelector() + " ] " + e.getMessage(), e);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 				info.result().addError(Work.Error.ERR, e.getMessage() +"\n" + e.fillInStackTrace(), e);
 				//mLogger.error(e.getMessage(), e.fillInStackTrace());
 			}
